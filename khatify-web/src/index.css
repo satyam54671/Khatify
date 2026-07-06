@@ -1,0 +1,187 @@
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Khatify brand palette — warm parchment + forest green + terracotta */
+    --background: 38 44% 96%;
+    --foreground: 24 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 24 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 24 10% 10%;
+
+    --primary: 147 50% 24%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 38 21% 93%;
+    --secondary-foreground: 24 10% 10%;
+
+    --muted: 38 23% 91%;
+    --muted-foreground: 25 8% 42%;
+
+    --accent: 20 57% 51%;
+    --accent-foreground: 0 0% 100%;
+
+    --gold: 44 54% 54%;
+    --gold-foreground: 24 10% 10%;
+
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 24 10% 85%;
+    --input: 38 25% 88%;
+    --ring: 147 50% 24%;
+
+    --sidebar: 147 50% 20%;
+    --sidebar-foreground: 148 39% 94%;
+    --sidebar-active: 44 54% 54%;
+    --sidebar-active-foreground: 147 50% 16%;
+    --sidebar-accent: 147 40% 26%;
+    --sidebar-border: 148 30% 30%;
+
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 150 14% 7%;
+    --foreground: 40 20% 95%;
+
+    --card: 150 12% 10%;
+    --card-foreground: 40 20% 95%;
+
+    --popover: 150 12% 10%;
+    --popover-foreground: 40 20% 95%;
+
+    --primary: 147 42% 48%;
+    --primary-foreground: 150 30% 8%;
+
+    --secondary: 150 10% 15%;
+    --secondary-foreground: 40 20% 95%;
+
+    --muted: 150 10% 15%;
+    --muted-foreground: 40 8% 62%;
+
+    --accent: 20 65% 58%;
+    --accent-foreground: 0 0% 100%;
+
+    --gold: 44 60% 60%;
+    --gold-foreground: 24 10% 10%;
+
+    --destructive: 0 65% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 150 10% 20%;
+    --input: 150 10% 18%;
+    --ring: 147 42% 48%;
+
+    --sidebar: 150 18% 9%;
+    --sidebar-foreground: 148 25% 90%;
+    --sidebar-active: 44 60% 60%;
+    --sidebar-active-foreground: 150 30% 10%;
+    --sidebar-accent: 150 15% 16%;
+    --sidebar-border: 150 15% 18%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+    box-sizing: border-box;
+  }
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    letter-spacing: -0.01em;
+    line-height: 1.6;
+  }
+}
+
+/* Custom scrollbars for a premium feel */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-border rounded-full;
+  transition: background 0.2s;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* Print styles */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+}
+
+/* Smooth transitions for dark/light mode toggle */
+*, *::before, *::after {
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+/* Disable transitions on interactive elements that need snappy response */
+button, a, input, select, textarea {
+  transition: none;
+}
+
+/* Focus ring improvements */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Table improvements */
+table {
+  border-collapse: collapse;
+}
+
+/* Animation utilities */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out forwards;
+}
+
+/* Skeleton shimmer */
+.animate-pulse {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--muted)) 25%,
+    hsl(var(--muted) / 0.7) 50%,
+    hsl(var(--muted)) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
