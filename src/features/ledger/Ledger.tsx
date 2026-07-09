@@ -52,127 +52,166 @@ export function Ledger() {
   });
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between no-print">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-8 no-print">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground md:text-2xl">General Ledger</h2>
-          <p className="text-sm text-muted-foreground">Audit journal of accounts receivable (debits) and incoming payments (credits).</p>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            Digital Ledger (Khata)
+          </h2>
+          <p className="text-[15px] font-medium text-muted-foreground mt-1">
+            Audit journal of accounts receivable (debits) and incoming payments (credits).
+          </p>
         </div>
-        <div className="flex items-center gap-2">
-          <Button variant="outline" size="sm" className="gap-1.5" onClick={() => window.print()}>
+        
+        <div className="flex items-center gap-3">
+          <Button 
+            variant="outline"
+            className="gap-2 rounded-full border-border/60 hover:bg-zinc-50 shadow-sm font-semibold px-5"
+            onClick={() => window.print()}
+          >
             <Printer className="h-4 w-4" /> Print Statement
           </Button>
         </div>
       </div>
 
       {/* Printable Header Wrapper (hidden in screen, visible in print) */}
-      <div className="hidden print:block border-b pb-6 mb-6">
-        <h1 className="text-2xl font-bold">Khatify - General Ledger Journal</h1>
+      <div className="hidden print:block border-b border-zinc-200 pb-6 mb-6">
+        <h1 className="text-2xl font-bold text-zinc-900">Digital Khata - General Ledger Journal</h1>
         <p className="text-sm text-zinc-500 mt-1">Generated on {new Date().toLocaleDateString()} - Account Auditing & Statements</p>
       </div>
 
       {/* Trial Balance Sheets */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl">
-        <Card className="p-4 bg-card/60">
-          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block">Total Debits (Dr)</span>
-          <div className="text-lg font-bold text-rose-600 dark:text-rose-400 mt-1">{formatCurrency(totalDebits)}</div>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">Total amount billed to clients</span>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl no-print">
+        <Card className="p-5 border-border/60 bg-white/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-rose-100 text-rose-700 rounded-lg">
+              <ArrowUpRight className="h-4 w-4" />
+            </div>
+            <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Total Debits (Dr)</span>
+          </div>
+          <div className="text-2xl font-black text-rose-600 mb-1">{formatCurrency(totalDebits)}</div>
+          <span className="text-xs font-medium text-muted-foreground">Total amount billed to clients</span>
         </Card>
-        <Card className="p-4 bg-card/60">
-          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block">Total Credits (Cr)</span>
-          <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-1">{formatCurrency(totalCredits)}</div>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">Total payments received/credited</span>
+        
+        <Card className="p-5 border-border/60 bg-white/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-emerald-100 text-emerald-700 rounded-lg">
+              <ArrowDownLeft className="h-4 w-4" />
+            </div>
+            <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Total Credits (Cr)</span>
+          </div>
+          <div className="text-2xl font-black text-emerald-600 mb-1">{formatCurrency(totalCredits)}</div>
+          <span className="text-xs font-medium text-muted-foreground">Total payments received/credited</span>
         </Card>
-        <Card className="p-4 bg-card/60">
-          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block">Net Receivables</span>
-          <div className={`text-lg font-bold mt-1 ${netReceivables > 0 ? 'text-rose-600 dark:text-rose-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
+        
+        <Card className="p-5 border-border/60 bg-white/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md">
+          <div className="flex items-center gap-3 mb-2">
+            <div className={`p-2 rounded-lg ${netReceivables > 0 ? 'bg-amber-100 text-amber-700' : 'bg-emerald-100 text-emerald-700'}`}>
+              <BookOpen className="h-4 w-4" />
+            </div>
+            <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Net Receivables</span>
+          </div>
+          <div className={`text-2xl font-black mb-1 ${netReceivables > 0 ? 'text-amber-600' : 'text-emerald-600'}`}>
             {formatCurrency(netReceivables)}
           </div>
-          <span className="text-[10px] text-muted-foreground mt-0.5 block">Net balance owed to company</span>
+          <span className="text-xs font-medium text-muted-foreground">Net balance owed to company</span>
         </Card>
       </div>
 
       {/* Main Journal Table */}
-      <Card>
-        <CardHeader className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-border/40 pb-4 no-print">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+      <div className="bg-white rounded-2xl border border-border/60 shadow-sm overflow-hidden flex flex-col print:border-none print:shadow-none">
+        <div className="p-4 sm:p-5 border-b border-border/40 bg-zinc-50/50 no-print flex flex-col md:flex-row gap-4 justify-between items-center">
+          <div className="relative w-full max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search description, customer, reference..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9"
+              className="pl-9 bg-white rounded-full border-border/60 shadow-sm h-10 w-full"
             />
           </div>
 
-          <div className="flex gap-1 bg-muted/60 p-0.5 rounded-lg border border-border/40 self-start md:self-auto">
+          <div className="flex bg-zinc-100/80 p-1 rounded-full border border-border/40 w-full md:w-auto">
             <Button
               variant="ghost"
               size="sm"
-              className={`h-7 px-3 text-xs ${typeFilter === 'all' ? 'bg-background shadow-sm text-foreground font-semibold' : 'text-muted-foreground'}`}
+              className={`flex-1 md:flex-none h-8 px-4 rounded-full text-sm font-semibold transition-all ${
+                typeFilter === 'all' 
+                  ? 'bg-white shadow-sm text-foreground' 
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
               onClick={() => setTypeFilter('all')}
             >
-              All Transactions
+              All
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className={`h-7 px-3 text-xs ${typeFilter === 'debit' ? 'bg-background shadow-sm text-foreground font-semibold' : 'text-muted-foreground'}`}
+              className={`flex-1 md:flex-none h-8 px-4 rounded-full text-sm font-semibold transition-all ${
+                typeFilter === 'debit' 
+                  ? 'bg-white shadow-sm text-foreground' 
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
               onClick={() => setTypeFilter('debit')}
             >
-              Debits (Dr)
+              Debits
             </Button>
             <Button
               variant="ghost"
               size="sm"
-              className={`h-7 px-3 text-xs ${typeFilter === 'credit' ? 'bg-background shadow-sm text-foreground font-semibold' : 'text-muted-foreground'}`}
+              className={`flex-1 md:flex-none h-8 px-4 rounded-full text-sm font-semibold transition-all ${
+                typeFilter === 'credit' 
+                  ? 'bg-white shadow-sm text-foreground' 
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
               onClick={() => setTypeFilter('credit')}
             >
-              Credits (Cr)
+              Credits
             </Button>
           </div>
-        </CardHeader>
-        <CardContent className="p-0">
+        </div>
+        
+        <div className="p-0">
           {ledgerLoading ? (
             <div className="p-6 space-y-4">
               {[...Array(5)].map((_, i) => (
-                <div key={i} className="h-10 w-full bg-muted/60 animate-pulse rounded" />
+                <div key={i} className="h-16 w-full bg-muted/60 animate-pulse rounded-xl" />
               ))}
             </div>
           ) : filteredLedger.length > 0 ? (
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="pl-6">Date</TableHead>
                   <TableHead>Customer</TableHead>
                   <TableHead>Transaction / Description</TableHead>
                   <TableHead>Type</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead className="text-right pr-6">Amount</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredLedger.map((entry) => (
-                  <TableRow key={entry.id}>
-                    <TableCell className="font-medium whitespace-nowrap">{formatDate(entry.date)}</TableCell>
-                    <TableCell className="font-semibold text-foreground">
-                      {entry.customerName || <span className="text-xs text-muted-foreground italic">General</span>}
+                  <TableRow key={entry.id} className="group transition-colors hover:bg-zinc-50/80">
+                    <TableCell className="pl-6 py-4 font-medium whitespace-nowrap text-muted-foreground">{formatDate(entry.date)}</TableCell>
+                    <TableCell className="py-4 font-bold text-[15px] text-foreground">
+                      {entry.customerName || <span className="text-sm text-muted-foreground italic font-medium">General</span>}
                     </TableCell>
-                    <TableCell className="text-foreground/80 max-w-[300px] truncate" title={entry.description}>
+                    <TableCell className="py-4 text-foreground/80 font-medium max-w-[300px] truncate" title={entry.description}>
                       {entry.description}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="py-4">
                       {entry.type === 'debit' ? (
-                        <Badge variant="outline" className="text-rose-600 border-rose-500/20 bg-rose-500/5 gap-1 py-0.5 font-semibold">
-                          <ArrowUpRight className="h-3 w-3 shrink-0" /> Debit (Dr)
+                        <Badge variant="outline" className="text-rose-600 border-rose-500/20 bg-rose-50 px-2.5 py-0.5 gap-1.5 font-bold shadow-sm">
+                          <ArrowUpRight className="h-3.5 w-3.5 shrink-0" /> Udhaar (Dr)
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="text-emerald-600 border-emerald-500/20 bg-emerald-500/5 gap-1 py-0.5 font-semibold">
-                          <ArrowDownLeft className="h-3 w-3 shrink-0" /> Credit (Cr)
+                        <Badge variant="outline" className="text-emerald-600 border-emerald-500/20 bg-emerald-50 px-2.5 py-0.5 gap-1.5 font-bold shadow-sm">
+                          <ArrowDownLeft className="h-3.5 w-3.5 shrink-0" /> Jamaa (Cr)
                         </Badge>
                       )}
                     </TableCell>
-                    <TableCell className="text-right font-bold text-foreground">
+                    <TableCell className="py-4 pr-6 text-right font-black text-[15px] text-foreground tracking-tight">
                       {formatCurrency(entry.amount)}
                     </TableCell>
                   </TableRow>
@@ -180,13 +219,18 @@ export function Ledger() {
               </TableBody>
             </Table>
           ) : (
-            <div className="text-center py-12 text-sm text-muted-foreground">
-              No transactions ledger entries found.
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="h-16 w-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
+                <BookOpen className="h-8 w-8 text-muted-foreground/50" />
+              </div>
+              <h3 className="text-lg font-semibold">No ledger entries found</h3>
+              <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                Transactions will appear here when invoices are generated or payments are received.
+              </p>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }
-
