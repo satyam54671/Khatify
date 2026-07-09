@@ -15,7 +15,8 @@ import {
   Calendar,
   CheckCircle,
   FileText,
-  User
+  User,
+  Wallet
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card';
@@ -178,81 +179,102 @@ export function Payments() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       {/* Header */}
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between mb-8">
         <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground md:text-2xl">Payments Received</h2>
-          <p className="text-sm text-muted-foreground">Log client receipts, bank wire transfers, card settlements, and partial payments.</p>
+          <h2 className="text-3xl font-bold tracking-tight text-foreground flex items-center gap-2">
+            Payments
+          </h2>
+          <p className="text-[15px] font-medium text-muted-foreground mt-1">
+            Log client receipts, bank wire transfers, and partial payments.
+          </p>
         </div>
-        <Button className="gap-1.5 self-start md:self-auto" onClick={() => setIsRecordOpen(true)}>
-          <Plus className="h-4 w-4" /> Record Payment
-        </Button>
+
+        <div className="flex items-center gap-3">
+          <Button
+            className="gap-2 rounded-full bg-primary hover:bg-primary/90 text-white shadow-sm font-semibold px-6"
+            onClick={() => setIsRecordOpen(true)}
+          >
+            <Plus className="h-4 w-4" /> Record Payment
+          </Button>
+        </div>
       </div>
 
       {/* Stats summary */}
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 max-w-3xl">
-        <Card className="p-4 bg-card/60">
-          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block">Total Collections</span>
-          <div className="text-lg font-bold text-emerald-600 dark:text-emerald-400 mt-1">{formatCurrency(totalCollected)}</div>
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 max-w-4xl">
+        <Card className="p-5 border-border/60 bg-white/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-emerald-100 text-emerald-700 rounded-lg">
+              <Wallet className="h-4 w-4" />
+            </div>
+            <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Total Collections</span>
+          </div>
+          <div className="text-2xl font-black text-emerald-600">{formatCurrency(totalCollected)}</div>
         </Card>
-        <Card className="p-4 bg-card/60">
-          <span className="text-[10px] font-semibold text-muted-foreground uppercase tracking-wider block">Transactions Logged</span>
-          <div className="text-lg font-bold text-foreground mt-1">{payments.length} Payments</div>
+        <Card className="p-5 border-border/60 bg-white/50 backdrop-blur-sm shadow-sm transition-all hover:shadow-md">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="p-2 bg-blue-100 text-blue-700 rounded-lg">
+              <CheckCircle className="h-4 w-4" />
+            </div>
+            <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest">Transactions Logged</span>
+          </div>
+          <div className="text-2xl font-black text-foreground">{payments.length} <span className="text-base font-semibold text-muted-foreground ml-1">Payments</span></div>
         </Card>
       </div>
 
       {/* Log list */}
-      <Card>
-        <CardHeader className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between border-b border-border/40 pb-4">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
+      <div className="bg-white rounded-2xl border border-border/60 shadow-sm overflow-hidden flex flex-col">
+        <div className="p-4 sm:p-5 border-b border-border/40 bg-zinc-50/50">
+          <div className="relative max-w-md">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               placeholder="Search by client name or invoice #..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-9"
+              className="pl-9 bg-white rounded-full border-border/60 shadow-sm h-10"
             />
           </div>
-        </CardHeader>
-        <CardContent className="p-0">
+        </div>
+
+        <div className="p-0">
           {paymentsLoading ? (
             <div className="p-6 space-y-4">
               {[...Array(4)].map((_, i) => (
-                <div key={i} className="h-10 w-full bg-muted/60 animate-pulse rounded" />
+                <div key={i} className="h-16 w-full bg-muted/60 animate-pulse rounded-xl" />
               ))}
             </div>
           ) : filteredPayments.length > 0 ? (
             <Table>
               <TableHeader>
-                <TableRow>
-                  <TableHead>Date</TableHead>
+                <TableRow className="hover:bg-transparent">
+                  <TableHead className="pl-6">Date</TableHead>
                   <TableHead>Customer</TableHead>
                   <TableHead>Reference</TableHead>
                   <TableHead>Method</TableHead>
                   <TableHead>Memo / Notes</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead className="text-right pr-6">Amount</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {filteredPayments.map((p) => (
-                  <TableRow key={p.id}>
-                    <TableCell className="font-medium whitespace-nowrap">{formatDate(p.createdAt)}</TableCell>
-                    <TableCell className="font-semibold text-foreground">{p.customerName}</TableCell>
-                    <TableCell>
+                  <TableRow key={p.id} className="group transition-colors hover:bg-zinc-50/80">
+                    <TableCell className="pl-6 py-4 font-medium whitespace-nowrap text-muted-foreground">{formatDate(p.createdAt)}</TableCell>
+                    <TableCell className="py-4 font-bold text-[15px] text-foreground">{p.customerName}</TableCell>
+                    <TableCell className="py-4">
                       {p.invoiceNumber ? (
-                        <Badge variant="outline" className="text-zinc-600 dark:text-zinc-400 bg-muted/40 font-medium">
+                        <Badge variant="outline" className="text-zinc-600 bg-white shadow-sm font-semibold border-border/60 px-2 py-0.5">
                           {p.invoiceNumber}
                         </Badge>
                       ) : (
-                        <span className="text-xs text-muted-foreground italic">Ledger Advance</span>
+                        <span className="text-xs text-muted-foreground italic font-medium">Ledger Advance</span>
                       )}
                     </TableCell>
-                    <TableCell className="capitalize whitespace-nowrap text-xs text-foreground/80">{getMethodLabel(p.method)}</TableCell>
-                    <TableCell className="max-w-[250px] truncate text-muted-foreground" title={p.notes || ''}>
-                      {p.notes || <span className="text-[10px] italic opacity-60">None</span>}
+                    <TableCell className="py-4 capitalize whitespace-nowrap text-sm font-semibold text-foreground/80">{getMethodLabel(p.method)}</TableCell>
+                    <TableCell className="py-4 max-w-[250px] truncate text-muted-foreground font-medium" title={p.notes || ''}>
+                      {p.notes || <span className="text-xs italic opacity-60">None</span>}
                     </TableCell>
-                    <TableCell className="text-right font-bold text-emerald-600 dark:text-emerald-400">
+                    <TableCell className="py-4 pr-6 text-right font-black text-[15px] text-emerald-600 tracking-tight">
                       + {formatCurrency(p.amount)}
                     </TableCell>
                   </TableRow>
@@ -260,38 +282,44 @@ export function Payments() {
               </TableBody>
             </Table>
           ) : (
-            <div className="text-center py-12 text-sm text-muted-foreground">
-              No payments recorded yet.
+            <div className="flex flex-col items-center justify-center py-20 text-center">
+              <div className="h-16 w-16 bg-muted/50 rounded-full flex items-center justify-center mb-4">
+                <Wallet className="h-8 w-8 text-muted-foreground/50" />
+              </div>
+              <h3 className="text-lg font-semibold">No payments recorded</h3>
+              <p className="text-sm text-muted-foreground mt-1 max-w-sm">
+                Get started by recording a payment from a client.
+              </p>
             </div>
           )}
-        </CardContent>
-      </Card>
+        </div>
+      </div>
 
       {/* DIALOG: Record Payment Form */}
       <Dialog open={isRecordOpen} onOpenChange={setIsRecordOpen}>
-        <DialogContent>
+        <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Record Payment</DialogTitle>
+            <DialogTitle className="text-xl">Record Payment</DialogTitle>
             <DialogDescription>Credit a customer's outstanding statement balance.</DialogDescription>
           </DialogHeader>
-          <form onSubmit={handleSubmit(handleRecordPayment)} className="space-y-4 py-2">
+          <form onSubmit={handleSubmit(handleRecordPayment)} className="space-y-5 py-4">
 
             {/* Customer select */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase">Customer</label>
-              <Select {...register('customerId')}>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Customer *</label>
+              <Select className="h-11 rounded-lg" {...register('customerId')}>
                 <option value="">-- Select Customer --</option>
                 {customers.map((c) => (
-                  <option key={c.id} value={c.id}>{c.name} ({formatCurrency(c.balance)} balance)</option>
+                  <option key={c.id} value={c.id}>{c.name} ({formatCurrency(Math.abs(c.balance))} {c.balance > 0 ? 'Due' : 'Credit'})</option>
                 ))}
               </Select>
-              {errors.customerId && <p className="text-xs text-rose-500">{errors.customerId.message}</p>}
+              {errors.customerId && <p className="text-xs text-rose-500 font-medium">{errors.customerId.message}</p>}
             </div>
 
             {/* Linked Invoice select */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase">Link to Outstanding Invoice (Optional)</label>
-              <Select {...register('invoiceId')} disabled={!watchCustomerId}>
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Link to Outstanding Invoice</label>
+              <Select className="h-11 rounded-lg" {...register('invoiceId')} disabled={!watchCustomerId}>
                 <option value="">-- General Payment (No Invoice) --</option>
                 {customerUnpaidInvoices.map((inv) => (
                   <option key={inv.id} value={inv.id}>{inv.invoiceNumber} - Due: {formatDate(inv.dueDate)} ({formatCurrency(inv.amount)})</option>
@@ -299,36 +327,38 @@ export function Payments() {
               </Select>
             </div>
 
-            {/* Amount */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase">Payment Amount</label>
-              <div className="relative">
-                <span className="absolute left-2.5 top-2 text-xs text-muted-foreground">$</span>
-                <Input type="number" step="0.01" className="pl-6" placeholder="0.00" {...register('amount')} />
+            <div className="grid grid-cols-2 gap-4">
+              {/* Amount */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Payment Amount *</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium">$</span>
+                  <Input type="number" step="0.01" className="h-11 pl-7 rounded-lg" placeholder="0.00" {...register('amount')} />
+                </div>
+                {errors.amount && <p className="text-xs text-rose-500 font-medium">{errors.amount.message}</p>}
               </div>
-              {errors.amount && <p className="text-xs text-rose-500">{errors.amount.message}</p>}
-            </div>
 
-            {/* Method */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase">Payment Method</label>
-              <Select {...register('method')}>
-                <option value="bank_transfer">Bank Transfer / Wire</option>
-                <option value="card">Credit/Debit Card</option>
-                <option value="cash">Cash</option>
-                <option value="other">Other</option>
-              </Select>
+              {/* Method */}
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Method *</label>
+                <Select className="h-11 rounded-lg" {...register('method')}>
+                  <option value="bank_transfer">Bank Transfer</option>
+                  <option value="card">Card</option>
+                  <option value="cash">Cash</option>
+                  <option value="other">Other</option>
+                </Select>
+              </div>
             </div>
 
             {/* Notes */}
-            <div className="space-y-1.5">
-              <label className="text-xs font-semibold text-muted-foreground uppercase">Memo / Reference Info</label>
-              <Input placeholder="e.g. Check number, wire confirmation ref..." {...register('notes')} />
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-muted-foreground uppercase tracking-wide">Memo / Reference Info</label>
+              <Input className="h-11 rounded-lg" placeholder="e.g. Check number, wire ref..." {...register('notes')} />
             </div>
 
-            <DialogFooter className="pt-4">
-              <Button type="button" variant="outline" onClick={closeRecordModal}>Cancel</Button>
-              <Button type="submit" disabled={recordPaymentMutation.isPending}>
+            <DialogFooter className="pt-6">
+              <Button type="button" variant="outline" className="rounded-full px-6" onClick={closeRecordModal}>Cancel</Button>
+              <Button type="submit" className="rounded-full px-8" disabled={recordPaymentMutation.isPending}>
                 {recordPaymentMutation.isPending ? 'Processing...' : 'Record Payment'}
               </Button>
             </DialogFooter>
@@ -338,4 +368,3 @@ export function Payments() {
     </div>
   );
 }
-

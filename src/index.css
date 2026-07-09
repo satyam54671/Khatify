@@ -6,8 +6,8 @@
 
 @layer base {
   :root {
-    /* Khatify brand palette — warm parchment + forest green + terracotta */
-    --background: 38 44% 96%;
+    /* Khatify brand palette — Premium SaaS Khata */
+    --background: 38 44% 96%; /* #FAF7F2 Warm Cream */
     --foreground: 24 10% 10%;
 
     --card: 0 0% 100%;
@@ -16,16 +16,16 @@
     --popover: 0 0% 100%;
     --popover-foreground: 24 10% 10%;
 
-    --primary: 147 50% 24%;
+    --primary: 147 50% 24%; /* #1F5C3A Forest Green */
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 38 21% 93%;
-    --secondary-foreground: 24 10% 10%;
+    --secondary: 225 55% 40%; /* #2E4A9E Indigo */
+    --secondary-foreground: 0 0% 100%;
 
     --muted: 38 23% 91%;
     --muted-foreground: 25 8% 42%;
 
-    --accent: 20 57% 51%;
+    --accent: 20 57% 51%; /* #C96B3C Terracotta */
     --accent-foreground: 0 0% 100%;
 
     --gold: 44 54% 54%;
@@ -38,12 +38,12 @@
     --input: 38 25% 88%;
     --ring: 147 50% 24%;
 
-    --sidebar: 147 50% 20%;
+    --sidebar: 147 50% 24%; /* Matches Primary */
     --sidebar-foreground: 148 39% 94%;
-    --sidebar-active: 44 54% 54%;
-    --sidebar-active-foreground: 147 50% 16%;
+    --sidebar-active: 147 45% 30%; /* Lighter green for active state */
+    --sidebar-active-foreground: 0 0% 100%;
     --sidebar-accent: 147 40% 26%;
-    --sidebar-border: 148 30% 30%;
+    --sidebar-border: 147 45% 30%;
 
     --radius: 0.75rem;
   }
